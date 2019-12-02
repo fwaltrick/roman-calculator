@@ -37,7 +37,7 @@ export default function Main() {
       case 2:
         setMessage("Don't forget the rules")
         setFootnote(
-          'In standard Roman numerals we should not use more than three consecutive copies of the same letter.'
+          'In standard Roman numerals we should not use more than three consecutive copies of the same letter. V, L and D are not repeated at all.'
         )
         setCountMessage(prevCount => prevCount + 1)
         break

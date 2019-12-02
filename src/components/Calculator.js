@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { validateNumber, toRoman, toArabic } from '../utils/convert'
+import Button from './Button'
+import Display from './Display'
 
 export default function Calculator() {
   const [input, setInput] = useState('')
@@ -9,12 +11,9 @@ export default function Calculator() {
   const [result, setResult] = useState('')
   const [operator, setOperator] = useState('')
 
+  // Data for rendering the buttons
   const numbersKeys = ['C', 'D', 'M', 'V', 'X', 'L', 'CE', 'I', '=']
   const operatorsKeys = ['+', '-', '×']
-  //   { sign: '+', operation: 'add' },
-  //   { sign: '-', operation: 'subtract' },
-  //   { sign: '×', operation: 'multiply' }
-  // ]
 
   const handleInput = val => {
     // To clean the display automatically if you start typing a number after an operation
@@ -26,6 +25,7 @@ export default function Calculator() {
 
   const clearInput = () => setInput('')
 
+  // Input manipulation triggered after user click an operator
   const calculation = operator => {
     setPrevNum(input)
     setInput('')
@@ -36,8 +36,6 @@ export default function Calculator() {
     const prevArabic = toArabic(prevNum)
     const curArabic = toArabic(curNum)
     let operation
-
-    console.log(prevArabic, curArabic)
 
     if (operator === '+') {
       operation = toRoman(prevArabic + curArabic)
@@ -55,9 +53,6 @@ export default function Calculator() {
     setOperator('')
   }
 
-  const composeOperations = num =>
-    setError(validateNumber(toRoman(toArabic(num))))
-
   useEffect(() => {
     setError(validateNumber(input))
     setCurNum(input)
@@ -66,10 +61,12 @@ export default function Calculator() {
   return (
     <div className="calc-wrapper">
       <Display error={error}>{input}</Display>
+
       <div className="numbers-wrapper">
         {numbersKeys.map(k => {
           return (
             <Button
+              testid="number"
               key={k}
               error={k !== 'CE' ? error : null}
               handleClick={
@@ -77,7 +74,7 @@ export default function Calculator() {
               }
               className={`button ${
                 k === '=' || k === 'CE' ? 'utility' : 'number'
-              } ${k === 'CE' ? 'ce' : null}`}
+              } ${k === 'CE' ? 'ce' : ''}`}
             >
               {k}
             </Button>
@@ -88,6 +85,7 @@ export default function Calculator() {
         {operatorsKeys.map(k => {
           return (
             <Button
+              testid="operator"
               key={k}
               error={error}
               className="button operator"
@@ -98,30 +96,6 @@ export default function Calculator() {
           )
         })}
       </div>
-    </div>
-  )
-}
-
-function Button(props) {
-  const { className, children, handleClick, error } = props
-  return (
-    <div
-      className={className}
-      style={error ? { pointerEvents: 'none', opacity: '0.2' } : null}
-      onClick={() => handleClick(children)}
-    >
-      {children}
-    </div>
-  )
-}
-
-function Display(props) {
-  const { error } = props
-  // ${error ? `error` : null}`
-  return (
-    <div className={`display-wrapper ${error ? 'display-error' : null}`}>
-      <div className="display-error-message">{error}</div>
-      <div className="display-number">{props.children}</div>
     </div>
   )
 }
